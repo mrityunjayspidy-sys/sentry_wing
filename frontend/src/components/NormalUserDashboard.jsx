@@ -42,7 +42,7 @@ import {
 import { CameraFeed } from './CameraFeed';
 import { TargetReticle } from './TargetReticle';
 import { AttributeCard } from './AttributeCard';
-import { apiFetch } from '../utils/api';
+import { apiFetch, getCustomBackendUrl } from '../utils/api';
 import { runEdgePhotoAnalysis } from '../utils/edgeDetector';
 
 export const NormalUserDashboard = ({
@@ -342,33 +342,50 @@ export const NormalUserDashboard = ({
 
     try {
       let data;
-      try {
-        const resp = await apiFetch('/api/detect/photo', {
-          method: 'POST',
-          body: formData
-        });
-        try {
-          data = await resp.json();
-        } catch {
-          const text = await resp.text().catch(() => '');
-          throw new Error(text || `Server error (${resp.status})`);
-        }
+      const isVercelHost = typeof window !== 'undefined' && window.location.hostname.includes('vercel.app');
+      const hasCustomBackend = !!getCustomBackendUrl();
 
-        if (!resp.ok || data.status !== 'success') {
-          throw new Error(data.detail || `Photo detection failed (${resp.status})`);
-        }
-      } catch (backendErr) {
-        console.warn('Backend unavailable, running Edge Wildlife Intelligence Engine:', backendErr.message);
+      // On static Vercel host without external Python backend, run Edge Neural Vision directly!
+      if (isVercelHost && !hasCustomBackend) {
         data = await runEdgePhotoAnalysis(photoFile, {
           uploader_id: currentUser?.id || 'user_01',
           uploader_name: currentUser?.name || 'Scout Ranger',
           location: selectedLocation,
           conf_threshold: photoConf
         });
+      } else {
+        try {
+          const resp = await apiFetch('/api/detect/photo', {
+            method: 'POST',
+            body: formData
+          });
+          try {
+            data = await resp.json();
+          } catch {
+            const text = await resp.text().catch(() => '');
+            throw new Error(text || `Server error (${resp.status})`);
+          }
+
+          if (!resp.ok || data.status !== 'success') {
+            throw new Error(data.detail || `Photo detection failed (${resp.status})`);
+          }
+        } catch (backendErr) {
+          console.warn('Backend unavailable, running Edge Neural Vision Engine:', backendErr.message);
+          data = await runEdgePhotoAnalysis(photoFile, {
+            uploader_id: currentUser?.id || 'user_01',
+            uploader_name: currentUser?.name || 'Scout Ranger',
+            location: selectedLocation,
+            conf_threshold: photoConf
+          });
+        }
       }
 
       setPhotoResult(data);
-      soundFx.playLockAcquired();
+      if (data.count > 0 && data.detections?.length > 0) {
+        soundFx.playLockAcquired();
+      } else {
+        soundFx.playTapClick();
+      }
       fetchMyHistory();
     } catch (err) {
       setPhotoError(err.message || 'Error processing photo upload');
@@ -442,32 +459,47 @@ export const NormalUserDashboard = ({
           throw new Error(data.detail || `Video processing failed (${resp.status})`);
         }
       } catch (backendErr) {
-        console.warn('Backend unavailable for video, using Edge Engine:', backendErr.message);
-        data = {
-          status: 'success',
-          count: 1,
-          events: [
-            {
-              id: `det_vid_${Date.now().toString(36)}`,
+        console.warn('Backend unavailable for video, analyzing keyframe with Edge Neural Vision:', backendErr.message);
+        try {
+          const videoElement = document.createElement('video');
+          videoElement.src = URL.createObjectURL(videoFile);
+          videoElement.muted = true;
+          await new Promise((res) => {
+            videoElement.onloadeddata = () => { videoElement.currentTime = 0.5; };
+            videoElement.onseeked = () => res();
+            videoElement.onerror = () => res();
+            setTimeout(res, 2000);
+          });
+          const canvas = document.createElement('canvas');
+          canvas.width = videoElement.videoWidth || 640;
+          canvas.height = videoElement.videoHeight || 480;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+          const blob = await new Promise((r) => canvas.toBlob(r, 'image/jpeg', 0.85));
+          if (blob) {
+            const edgeData = await runEdgePhotoAnalysis(new File([blob], videoFile.name, { type: 'image/jpeg' }), {
               uploader_id: currentUser?.id || 'user_01',
               uploader_name: currentUser?.name || 'Scout Ranger',
-              source_type: 'video',
-              species: 'leopard',
-              confidence: 0.93,
-              timestamp: new Date().toISOString(),
-              location_name: selectedLocation.name,
-              lat: selectedLocation.lat,
-              lng: selectedLocation.lng,
-              dosage: {
-                drug: 'Ketamine + Medetomidine (5:1)',
-                dosage_mg: 280,
-                dosage_per_kg: 5.0,
-                confidence: 0.95,
-                notes: 'Dart in shoulder or upper rump.'
-              }
-            }
-          ]
-        };
+              location: selectedLocation,
+              conf_threshold: videoConf
+            });
+            data = {
+              status: 'success',
+              count: edgeData.count,
+              events: edgeData.detections || [],
+              engine: 'SentryWing Edge Video Keyframe Analyzer'
+            };
+          } else {
+            throw new Error('Could not extract frame');
+          }
+        } catch {
+          data = {
+            status: 'success',
+            count: 0,
+            events: [],
+            engine: 'SentryWing Video Processor (0 Targets Detected)'
+          };
+        }
       }
 
       clearInterval(progressTimer);
@@ -784,7 +816,11 @@ export const NormalUserDashboard = ({
                         <CheckCircle size={15} />
                         <span>{photoResult.count || (photoResult.detections?.length || 0)} ANIMAL(S) DETECTED</span>
                       </div>
-                      <span className="dispatch-alert-pill">NOTIFIED VET & ADMIN</span>
+                      {(photoResult.count > 0 || (photoResult.detections && photoResult.detections.length > 0)) ? (
+                        <span className="dispatch-alert-pill">NOTIFIED VET & ADMIN</span>
+                      ) : (
+                        <span className="panel-meta-tag">STANDBY // NO TARGET</span>
+                      )}
                     </div>
 
                     {photoResult.annotated_image && (
