@@ -1,6 +1,7 @@
 -- =============================================================================
 -- SENTRYWING WILDLIFE SURVEILLANCE & TARGET TRACKING
--- SUPABASE DATABASE SCHEMA: AUTH, PARAMETERS, AND NOTIFICATIONS
+-- SUPABASE DATABASE SCHEMA: AUTH, PARAMETERS, NOTIFICATIONS & DETECTIONS
+-- (100% Idempotent - Can be run repeatedly in Supabase SQL Editor safely)
 -- =============================================================================
 
 -- Enable UUID extension if not already enabled
@@ -21,16 +22,19 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 -- Enable RLS on profiles
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Public profiles are readable by authenticated users" ON public.profiles;
 CREATE POLICY "Public profiles are readable by authenticated users"
     ON public.profiles FOR SELECT
     TO authenticated
     USING (true);
 
+DROP POLICY IF EXISTS "Users can insert their own profile" ON public.profiles;
 CREATE POLICY "Users can insert their own profile"
     ON public.profiles FOR INSERT
     TO authenticated
     WITH CHECK (auth.uid() = id);
 
+DROP POLICY IF EXISTS "Users can update their own profile" ON public.profiles;
 CREATE POLICY "Users can update their own profile"
     ON public.profiles FOR UPDATE
     TO authenticated
@@ -81,22 +85,25 @@ CREATE INDEX IF NOT EXISTS idx_parameters_category ON public.parameters(category
 -- Enable RLS on parameters
 ALTER TABLE public.parameters ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Parameters are readable by all authenticated users" ON public.parameters;
 CREATE POLICY "Parameters are readable by all authenticated users"
     ON public.parameters FOR SELECT
     TO authenticated
     USING (true);
 
+DROP POLICY IF EXISTS "Parameters are modifiable by authenticated users" ON public.parameters;
 CREATE POLICY "Parameters are modifiable by authenticated users"
     ON public.parameters FOR ALL
     TO authenticated
     USING (true);
 
--- Allow public read/write if anon key is used
+DROP POLICY IF EXISTS "Parameters anon read" ON public.parameters;
 CREATE POLICY "Parameters anon read"
     ON public.parameters FOR SELECT
     TO anon
     USING (true);
 
+DROP POLICY IF EXISTS "Parameters anon upsert" ON public.parameters;
 CREATE POLICY "Parameters anon upsert"
     ON public.parameters FOR ALL
     TO anon
@@ -125,7 +132,7 @@ CREATE TABLE IF NOT EXISTS public.notifications (
     created_at TIMESTAMPTZ DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
--- Ensure all columns exist if the table was created earlier with a different schema
+-- Ensure all columns exist if the table was created earlier with an alternate schema
 ALTER TABLE public.notifications ADD COLUMN IF NOT EXISTS recipient_role TEXT DEFAULT 'all';
 ALTER TABLE public.notifications ADD COLUMN IF NOT EXISTS detection_id TEXT;
 ALTER TABLE public.notifications ADD COLUMN IF NOT EXISTS species TEXT;
@@ -148,11 +155,13 @@ CREATE INDEX IF NOT EXISTS idx_notifications_recipient_role ON public.notificati
 -- Enable RLS on notifications
 ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Notifications are accessible by authenticated users" ON public.notifications;
 CREATE POLICY "Notifications are accessible by authenticated users"
     ON public.notifications FOR ALL
     TO authenticated
     USING (true);
 
+DROP POLICY IF EXISTS "Notifications anon read and write" ON public.notifications;
 CREATE POLICY "Notifications anon read and write"
     ON public.notifications FOR ALL
     TO anon
@@ -200,18 +209,40 @@ CREATE TABLE IF NOT EXISTS public.detections (
     created_at TIMESTAMPTZ DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
+-- Ensure all columns exist if table existed prior
+ALTER TABLE public.detections ADD COLUMN IF NOT EXISTS uploader_id TEXT;
+ALTER TABLE public.detections ADD COLUMN IF NOT EXISTS uploader_name TEXT;
+ALTER TABLE public.detections ADD COLUMN IF NOT EXISTS source_type TEXT DEFAULT 'live';
+ALTER TABLE public.detections ADD COLUMN IF NOT EXISTS media_ref TEXT;
+ALTER TABLE public.detections ADD COLUMN IF NOT EXISTS species TEXT;
+ALTER TABLE public.detections ADD COLUMN IF NOT EXISTS confidence DOUBLE PRECISION;
+ALTER TABLE public.detections ADD COLUMN IF NOT EXISTS bbox JSONB;
+ALTER TABLE public.detections ADD COLUMN IF NOT EXISTS attributes JSONB;
+ALTER TABLE public.detections ADD COLUMN IF NOT EXISTS dosage JSONB;
+ALTER TABLE public.detections ADD COLUMN IF NOT EXISTS drug_recommendation TEXT;
+ALTER TABLE public.detections ADD COLUMN IF NOT EXISTS dosage_mg DOUBLE PRECISION;
+ALTER TABLE public.detections ADD COLUMN IF NOT EXISTS dosage_per_kg DOUBLE PRECISION;
+ALTER TABLE public.detections ADD COLUMN IF NOT EXISTS dosage_confidence DOUBLE PRECISION;
+ALTER TABLE public.detections ADD COLUMN IF NOT EXISTS dosage_notes TEXT;
+ALTER TABLE public.detections ADD COLUMN IF NOT EXISTS lat DOUBLE PRECISION;
+ALTER TABLE public.detections ADD COLUMN IF NOT EXISTS lng DOUBLE PRECISION;
+ALTER TABLE public.detections ADD COLUMN IF NOT EXISTS location_name TEXT;
+ALTER TABLE public.detections ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'new';
+ALTER TABLE public.detections ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT TIMEZONE('utc'::text, NOW());
+
 CREATE INDEX IF NOT EXISTS idx_detections_species ON public.detections(species);
 CREATE INDEX IF NOT EXISTS idx_detections_created_at ON public.detections(created_at DESC);
 
 ALTER TABLE public.detections ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Detections are accessible by authenticated users" ON public.detections;
 CREATE POLICY "Detections are accessible by authenticated users"
     ON public.detections FOR ALL
     TO authenticated
     USING (true);
 
+DROP POLICY IF EXISTS "Detections anon read and write" ON public.detections;
 CREATE POLICY "Detections anon read and write"
     ON public.detections FOR ALL
     TO anon
     USING (true);
-
