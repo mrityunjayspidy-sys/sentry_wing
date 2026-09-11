@@ -1,0 +1,36 @@
+# Node / Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.vite-temp/
+
+# Python / Backend
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+*.egg-info/
+backend/__pycache__/
+bridge/__pycache__/
+
+# Environment & Local secrets
+.env
+frontend/.env
+bridge/.env
+backend/.env
+
+# Local Databases (Keep schema, ignore runtime instance if desired, or keep as sample)
+backend/data/*.db-journal
+*.db
+backend/data/*.db
+
+# OS & IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+.tempmediaStorage/
+scratch/

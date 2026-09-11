@@ -1,0 +1,32 @@
+[
+  {
+    "id": "ranger_maya",
+    "username": "ranger_maya",
+    "name": "Ranger Maya Patil",
+    "role": "normal_user",
+    "badge": "Scout Sector 4",
+    "email": "maya.patil@forest.gov.in",
+    "created_at": "2026-09-01T08:00:00Z",
+    "last_active": "Just now"
+  },
+  {
+    "id": "dr_rajiv",
+    "username": "dr_rajiv",
+    "name": "Dr. Rajiv Sen",
+    "role": "veterinarian",
+    "badge": "Chief Wildlife Medical Officer",
+    "email": "dr.rajiv.sen@vetcorp.org",
+    "created_at": "2026-08-15T09:30:00Z",
+    "last_active": "Active 5m ago"
+  },
+  {
+    "id": "officer_sharma",
+    "username": "officer_sharma",
+    "name": "Officer K. Sharma",
+    "role": "admin",
+    "badge": "Divisional Forest Officer (DFO)",
+    "email": "k.sharma@forest.gov.in",
+    "created_at": "2026-07-20T10:00:00Z",
+    "last_active": "Active now"
+  }
+]
