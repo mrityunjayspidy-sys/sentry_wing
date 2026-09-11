@@ -643,7 +643,7 @@ export async function runEdgePhotoAnalysis(file, options = {}) {
               detections.push({
                 species: item.species,
                 class_name: item.species,
-                confidence: Math.min(0.99, Math.max(0.60, item.score)),
+                confidence: Math.min(0.99, Math.max(0.35, item.score)),
                 bbox: [item.x1, item.y1, item.x2, item.y2],
                 attributes,
                 dosage,

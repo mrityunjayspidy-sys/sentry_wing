@@ -168,19 +168,6 @@ CREATE POLICY "Notifications anon read and write"
     USING (true);
 
 
--- -----------------------------------------------------------------------------
--- 4. SEED DEFAULT SYSTEM PARAMETERS
--- -----------------------------------------------------------------------------
-INSERT INTO public.parameters (key, value, category, updated_by)
-VALUES
-    ('detection_config', '{"confidence_threshold": 0.25, "iou_threshold": 0.45, "input_size": 640}'::jsonb, 'pipeline', 'system_init'),
-    ('tracking_config', '{"lock_lost_threshold": 10, "center_deadband": 0.08, "match_distance": 0.55}'::jsonb, 'tracking', 'system_init'),
-    ('dosage_config', '{"primary_model": "dart_dose_model", "standard_concentration_mg_ml": 100.0, "disclaimer": "AI-estimated dosage — verify before administering"}'::jsonb, 'dosage', 'system_init'),
-    ('species_weight_bands', '{"tiger": "40–250 kg", "elephant": "1500–6000+ kg", "leopard": "30–90 kg", "bear": "80–600 kg", "hyena": "45–80 kg", "lion": "120–250 kg"}'::jsonb, 'biometrics', 'system_init')
-ON CONFLICT (key) DO UPDATE SET
-    value = EXCLUDED.value,
-    updated_at = NOW();
-
 
 -- -----------------------------------------------------------------------------
 -- 5. WILDLIFE DETECTIONS TABLE
