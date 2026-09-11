@@ -32,6 +32,15 @@ export const getApiBaseUrl = () => {
   const custom = getCustomBackendUrl();
   if (custom) return custom;
   if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL.replace(/\/+$/, '');
+
+  // If running locally on HTTP (e.g. http://localhost:5173), direct connect to port 8000
+  if (typeof window !== 'undefined') {
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (isLocal && window.location.protocol === 'http:') {
+      return 'http://127.0.0.1:8000';
+    }
+  }
+
   return '';
 };
 

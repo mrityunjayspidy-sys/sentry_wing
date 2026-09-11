@@ -258,3 +258,18 @@ export const supabaseClearNotifications = async () => {
     return false;
   }
 };
+
+export const supabaseSaveDetection = async (detection) => {
+  if (!supabase) return { success: false, reason: 'unconfigured' };
+  try {
+    const { data, error } = await supabase
+      .from('detections')
+      .upsert(detection, { onConflict: 'id' })
+      .select();
+    if (error) return { success: false, error: error.message };
+    return { success: true, data };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+};
+
