@@ -125,6 +125,22 @@ CREATE TABLE IF NOT EXISTS public.notifications (
     created_at TIMESTAMPTZ DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
+-- Ensure all columns exist if the table was created earlier with a different schema
+ALTER TABLE public.notifications ADD COLUMN IF NOT EXISTS recipient_role TEXT DEFAULT 'all';
+ALTER TABLE public.notifications ADD COLUMN IF NOT EXISTS detection_id TEXT;
+ALTER TABLE public.notifications ADD COLUMN IF NOT EXISTS species TEXT;
+ALTER TABLE public.notifications ADD COLUMN IF NOT EXISTS thumbnail TEXT;
+ALTER TABLE public.notifications ADD COLUMN IF NOT EXISTS location_name TEXT;
+ALTER TABLE public.notifications ADD COLUMN IF NOT EXISTS lat DOUBLE PRECISION;
+ALTER TABLE public.notifications ADD COLUMN IF NOT EXISTS lng DOUBLE PRECISION;
+ALTER TABLE public.notifications ADD COLUMN IF NOT EXISTS timestamp TEXT;
+ALTER TABLE public.notifications ADD COLUMN IF NOT EXISTS source_type TEXT DEFAULT 'live';
+ALTER TABLE public.notifications ADD COLUMN IF NOT EXISTS uploader TEXT DEFAULT 'Scout Ranger';
+ALTER TABLE public.notifications ADD COLUMN IF NOT EXISTS dosage JSONB;
+ALTER TABLE public.notifications ADD COLUMN IF NOT EXISTS attributes JSONB;
+ALTER TABLE public.notifications ADD COLUMN IF NOT EXISTS read BOOLEAN DEFAULT false;
+ALTER TABLE public.notifications ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT TIMEZONE('utc'::text, NOW());
+
 -- Index on created_at and recipient_role
 CREATE INDEX IF NOT EXISTS idx_notifications_created_at ON public.notifications(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_notifications_recipient_role ON public.notifications(recipient_role);
