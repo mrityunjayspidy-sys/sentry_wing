@@ -155,3 +155,47 @@ VALUES
 ON CONFLICT (key) DO UPDATE SET
     value = EXCLUDED.value,
     updated_at = NOW();
+
+
+-- -----------------------------------------------------------------------------
+-- 5. WILDLIFE DETECTIONS TABLE
+-- Stores AI detection events with bounding boxes, biometrics, and dart dosages
+-- -----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.detections (
+    id TEXT PRIMARY KEY,
+    uploader_id TEXT,
+    uploader_name TEXT,
+    source_type TEXT DEFAULT 'live',
+    media_ref TEXT,
+    species TEXT NOT NULL,
+    confidence DOUBLE PRECISION NOT NULL,
+    bbox JSONB,
+    attributes JSONB,
+    dosage JSONB,
+    drug_recommendation TEXT,
+    dosage_mg DOUBLE PRECISION,
+    dosage_per_kg DOUBLE PRECISION,
+    dosage_confidence DOUBLE PRECISION,
+    dosage_notes TEXT,
+    lat DOUBLE PRECISION,
+    lng DOUBLE PRECISION,
+    location_name TEXT,
+    status TEXT DEFAULT 'new',
+    created_at TIMESTAMPTZ DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_detections_species ON public.detections(species);
+CREATE INDEX IF NOT EXISTS idx_detections_created_at ON public.detections(created_at DESC);
+
+ALTER TABLE public.detections ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Detections are accessible by authenticated users"
+    ON public.detections FOR ALL
+    TO authenticated
+    USING (true);
+
+CREATE POLICY "Detections anon read and write"
+    ON public.detections FOR ALL
+    TO anon
+    USING (true);
+
