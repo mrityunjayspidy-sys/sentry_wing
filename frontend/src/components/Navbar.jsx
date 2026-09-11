@@ -52,8 +52,11 @@ export const Navbar = ({
       <div className="nav-controls-section">
         {/* About & Tech Stack Info Button */}
         <button
+          type="button"
           className="btn-info-about"
-          onClick={() => {
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
             soundFx.playTapClick();
             if (onOpenAboutModal) onOpenAboutModal();
           }}

@@ -36,15 +36,23 @@ export const AboutModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="auth-modal-overlay" onClick={onClose}>
+    <div className="modal-backdrop" onClick={onClose} style={{ zIndex: 25000 }}>
       <div
-        className="auth-modal-content about-modal-wrapper"
-        style={{ maxWidth: '820px', width: '92%', maxHeight: '88vh', overflowY: 'auto' }}
+        className="tactical-modal-box about-modal-wrapper"
+        style={{
+          maxWidth: '860px',
+          width: '94%',
+          maxHeight: '88vh',
+          overflowY: 'auto',
+          position: 'relative'
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         <button
+          type="button"
           className="auth-modal-close"
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             soundFx.playTapClick();
             onClose();
           }}

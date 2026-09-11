@@ -112,13 +112,21 @@ export const BackendModal = ({ isOpen, onClose, isConnected }) => {
   };
 
   return (
-    <div className="auth-modal-overlay" onClick={onClose}>
+    <div className="modal-backdrop" onClick={onClose} style={{ zIndex: 25000 }}>
       <div
-        className="auth-modal-content"
-        style={{ maxWidth: '600px' }}
+        className="tactical-modal-box"
+        style={{ maxWidth: '600px', width: '92%', maxHeight: '88vh', overflowY: 'auto', position: 'relative', padding: '24px' }}
         onClick={(e) => e.stopPropagation()}
       >
-        <button className="auth-modal-close" onClick={onClose}>
+        <button
+          type="button"
+          className="auth-modal-close"
+          onClick={(e) => {
+            e.stopPropagation();
+            soundFx.playTapClick();
+            onClose();
+          }}
+        >
           <X size={18} />
         </button>
 
