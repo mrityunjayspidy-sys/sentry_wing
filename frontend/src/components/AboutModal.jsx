@@ -68,8 +68,7 @@ export const AboutModal = ({ isOpen, onClose }) => {
           </div>
 
           <div className="about-meta-badges">
-            <span className="spec-chip active">v2.1 MONOCHROME</span>
-            <span className="spec-chip">EDGE + CLOUD READY</span>
+            <span className="spec-chip active">EDGE + CLOUD READY</span>
             <span className="spec-chip">PYTORCH YOLOv8</span>
             <span className="spec-chip">SUPABASE SYNC</span>
           </div>

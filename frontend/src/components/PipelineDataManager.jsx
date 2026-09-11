@@ -139,12 +139,12 @@ export const PipelineDataManager = () => {
               width: 40,
               height: 40,
               borderRadius: 8,
-              background: 'rgba(0, 255, 136, 0.12)',
-              border: '1px solid rgba(0, 255, 136, 0.3)',
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#00ff88'
+              color: '#ffffff'
             }}>
               <Database size={20} />
             </div>
@@ -206,12 +206,12 @@ export const PipelineDataManager = () => {
 
         {purgeSuccessMsg && (
           <div style={{
-            background: 'rgba(0, 255, 136, 0.1)',
-            border: '1px solid rgba(0, 255, 136, 0.3)',
+            background: 'rgba(255, 255, 255, 0.08)',
+            border: '1px solid rgba(255, 255, 255, 0.25)',
             borderRadius: 6,
             padding: '8px 14px',
             fontSize: 12,
-            color: '#00ff88',
+            color: '#ffffff',
             display: 'flex',
             alignItems: 'center',
             gap: 8
@@ -241,16 +241,16 @@ export const PipelineDataManager = () => {
           </div>
 
           <div style={{
-            background: 'rgba(0, 255, 136, 0.05)',
-            border: '1px solid rgba(0, 255, 136, 0.2)',
+            background: 'rgba(255, 255, 255, 0.04)',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
             borderRadius: 6,
             padding: '12px 14px'
           }}>
-            <span style={{ fontSize: 11, color: '#00ff88', letterSpacing: '0.05em' }}>VALID PIPELINE RECORDS</span>
-            <div style={{ fontSize: 22, fontWeight: 700, color: '#00ff88', marginTop: 4 }}>
+            <span style={{ fontSize: 11, color: '#ffffff', letterSpacing: '0.05em' }}>VALID PIPELINE RECORDS</span>
+            <div style={{ fontSize: 22, fontWeight: 700, color: '#ffffff', marginTop: 4 }}>
               {stats?.valid_count || 0}
             </div>
-            <span style={{ fontSize: 11, color: 'rgba(0, 255, 136, 0.7)' }}>
+            <span style={{ fontSize: 11, color: 'rgba(255, 255, 255, 0.6)' }}>
               {stats?.valid_rate_percent || 100}% Clean Pass Rate
             </span>
           </div>
@@ -309,8 +309,8 @@ export const PipelineDataManager = () => {
               padding: '6px 14px',
               borderRadius: 4,
               border: 'none',
-              background: viewMode === 'valid' ? 'rgba(0, 255, 136, 0.2)' : 'transparent',
-              color: viewMode === 'valid' ? '#00ff88' : 'rgba(255, 255, 255, 0.6)',
+              background: viewMode === 'valid' ? 'rgba(255, 255, 255, 0.15)' : 'transparent',
+              color: viewMode === 'valid' ? '#ffffff' : 'rgba(255, 255, 255, 0.6)',
               fontSize: 12,
               fontWeight: 600,
               cursor: 'pointer',
@@ -422,7 +422,7 @@ export const PipelineDataManager = () => {
                 style={{
                   background: 'rgba(255, 255, 255, 0.03)',
                   border: isItemValid
-                    ? '1px solid rgba(0, 255, 136, 0.2)'
+                    ? '1px solid rgba(255, 255, 255, 0.15)'
                     : '1px solid rgba(255, 107, 107, 0.25)',
                   borderRadius: 6,
                   padding: '12px 14px',
@@ -460,9 +460,9 @@ export const PipelineDataManager = () => {
                     fontWeight: 700,
                     padding: '2px 8px',
                     borderRadius: 4,
-                    background: isItemValid ? 'rgba(0, 255, 136, 0.15)' : 'rgba(255, 107, 107, 0.18)',
-                    color: isItemValid ? '#00ff88' : '#ff6b6b',
-                    border: isItemValid ? '1px solid rgba(0, 255, 136, 0.3)' : '1px solid rgba(255, 107, 107, 0.35)'
+                    background: isItemValid ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 107, 107, 0.18)',
+                    color: isItemValid ? '#ffffff' : '#ff6b6b',
+                    border: isItemValid ? '1px solid rgba(255, 255, 255, 0.25)' : '1px solid rgba(255, 107, 107, 0.35)'
                   }}>
                     {item.filter_reason || (isItemValid ? 'PASSED' : 'REJECTED')}
                   </span>
@@ -593,8 +593,8 @@ export const PipelineDataManager = () => {
                   fontWeight: 700,
                   padding: '2px 8px',
                   borderRadius: 4,
-                  background: selectedRecord.is_valid ? 'rgba(0, 255, 136, 0.15)' : 'rgba(255, 107, 107, 0.2)',
-                  color: selectedRecord.is_valid ? '#00ff88' : '#ff6b6b'
+                  background: selectedRecord.is_valid ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 107, 107, 0.2)',
+                  color: selectedRecord.is_valid ? '#ffffff' : '#ff6b6b'
                 }}>
                   {selectedRecord.filter_reason}
                 </span>

@@ -48,7 +48,7 @@ export const TargetReticle = ({ tracking }) => {
           className="gimbal-pointer-arrow"
           style={{
             color: locked ? (direction === 'CENTERED' ? 'var(--hud-cyan)' : 'var(--hud-green)') : 'var(--text-muted)',
-            filter: locked ? 'drop-shadow(0 0 6px rgba(0, 255, 136, 0.8))' : 'none'
+            filter: locked ? 'drop-shadow(0 0 6px rgba(255, 255, 255, 0.8))' : 'none'
           }}
         >
           {renderDirectionIcon()}

@@ -146,9 +146,9 @@ export function renderTacticalOverlay(imgElement, bbox, species, conf) {
   const cornerLen = Math.min(w, h) * 0.25;
 
   ctx.save();
-  ctx.strokeStyle = '#00ff88';
+  ctx.strokeStyle = '#ffffff';
   ctx.lineWidth = Math.max(3, Math.round(canvas.width * 0.004));
-  ctx.shadowColor = 'rgba(0, 255, 136, 0.8)';
+  ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
   ctx.shadowBlur = 8;
 
   // Top-Left corner
@@ -200,11 +200,11 @@ export function renderTacticalOverlay(imgElement, bbox, species, conf) {
   ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
   ctx.fillRect(x1, Math.max(0, y1 - fontSize - pad * 2), textMetrics.width + pad * 2, fontSize + pad * 2);
 
-  ctx.strokeStyle = '#00ff88';
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
   ctx.lineWidth = 1;
   ctx.strokeRect(x1, Math.max(0, y1 - fontSize - pad * 2), textMetrics.width + pad * 2, fontSize + pad * 2);
 
-  ctx.fillStyle = '#00ff88';
+  ctx.fillStyle = '#ffffff';
   ctx.fillText(label, x1 + pad, Math.max(fontSize + pad, y1 - pad));
 
   ctx.restore();

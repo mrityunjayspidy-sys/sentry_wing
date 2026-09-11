@@ -140,10 +140,10 @@ export const BackendModal = ({ isOpen, onClose, isConnected }) => {
             style={{
               flex: 1,
               padding: '8px 12px',
-              background: activeTab === 'supabase' ? 'rgba(0, 255, 136, 0.12)' : 'transparent',
-              border: `1px solid ${activeTab === 'supabase' ? 'rgba(0, 255, 136, 0.4)' : 'rgba(255,255,255,0.08)'}`,
+              background: activeTab === 'supabase' ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
+              border: `1px solid ${activeTab === 'supabase' ? 'rgba(255, 255, 255, 0.3)' : 'rgba(255,255,255,0.08)'}`,
               borderRadius: '4px',
-              color: activeTab === 'supabase' ? '#00ff88' : '#888',
+              color: activeTab === 'supabase' ? '#ffffff' : '#888',
               fontSize: '12px',
               fontWeight: 800,
               cursor: 'pointer',
@@ -156,7 +156,7 @@ export const BackendModal = ({ isOpen, onClose, isConnected }) => {
           >
             <Database size={14} />
             <span>SUPABASE CLOUD LINK</span>
-            {supabaseStatus && <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#00ff88' }} />}
+            {supabaseStatus && <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#ffffff' }} />}
           </button>
 
           <button
@@ -180,7 +180,7 @@ export const BackendModal = ({ isOpen, onClose, isConnected }) => {
           >
             <Server size={14} />
             <span>AI VISION BACKEND</span>
-            {isConnected && <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#00ff88' }} />}
+            {isConnected && <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#ffffff' }} />}
           </button>
         </div>
 
@@ -196,8 +196,8 @@ export const BackendModal = ({ isOpen, onClose, isConnected }) => {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '10px 14px',
-                background: supabaseStatus ? 'rgba(0, 255, 100, 0.08)' : 'rgba(255, 255, 255, 0.03)',
-                border: `1px solid ${supabaseStatus ? 'rgba(0, 255, 100, 0.3)' : 'rgba(255, 255, 255, 0.1)'}`,
+                background: supabaseStatus ? 'rgba(255, 255, 255, 0.06)' : 'rgba(255, 255, 255, 0.03)',
+                border: `1px solid ${supabaseStatus ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.1)'}`,
                 borderRadius: '6px'
               }}
             >
@@ -207,8 +207,8 @@ export const BackendModal = ({ isOpen, onClose, isConnected }) => {
                     width: '10px',
                     height: '10px',
                     borderRadius: '50%',
-                    background: supabaseStatus ? '#00ff88' : '#888',
-                    boxShadow: supabaseStatus ? '0 0 8px #00ff88' : 'none'
+                    background: supabaseStatus ? '#ffffff' : '#888',
+                    boxShadow: supabaseStatus ? '0 0 6px rgba(255, 255, 255, 0.6)' : 'none'
                   }}
                 />
                 <div>
@@ -239,7 +239,7 @@ export const BackendModal = ({ isOpen, onClose, isConnected }) => {
               </div>
               <div>1. Open your project on <strong style={{ color: '#fff' }}>supabase.com/dashboard</strong></div>
               <div>2. Click <strong style={{ color: '#fff' }}>Project Settings</strong> (gear icon) &rarr; <strong style={{ color: '#fff' }}>API</strong></div>
-              <div>3. Copy <strong style={{ color: '#00ff88' }}>Project URL</strong> and <strong style={{ color: '#00ff88' }}>anon/public Key</strong> and paste below:</div>
+              <div>3. Copy <strong style={{ color: '#ffffff' }}>Project URL</strong> and <strong style={{ color: '#ffffff' }}>anon/public Key</strong> and paste below:</div>
             </div>
 
             {/* URL Input */}
@@ -284,9 +284,9 @@ export const BackendModal = ({ isOpen, onClose, isConnected }) => {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '8px',
-                  background: testSupabaseResult.success ? 'rgba(0, 255, 100, 0.1)' : 'rgba(255, 50, 50, 0.1)',
-                  color: testSupabaseResult.success ? '#00ff88' : '#ff6666',
-                  border: `1px solid ${testSupabaseResult.success ? 'rgba(0, 255, 100, 0.3)' : 'rgba(255, 50, 50, 0.3)'}`
+                  background: testSupabaseResult.success ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 50, 50, 0.1)',
+                  color: testSupabaseResult.success ? '#ffffff' : '#ff6666',
+                  border: `1px solid ${testSupabaseResult.success ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 50, 50, 0.3)'}`
                 }}
               >
                 {testSupabaseResult.success ? (
@@ -319,7 +319,7 @@ export const BackendModal = ({ isOpen, onClose, isConnected }) => {
               <button
                 type="button"
                 className="btn-auth-submit"
-                style={{ flex: 1.5, background: '#00ff88', color: '#000', fontWeight: 800 }}
+                style={{ flex: 1.5, background: '#ffffff', color: '#000', fontWeight: 800 }}
                 onClick={handleSaveSupabase}
                 disabled={!supabaseUrlInput || !supabaseKeyInput}
               >
@@ -328,38 +328,41 @@ export const BackendModal = ({ isOpen, onClose, isConnected }) => {
             </div>
 
             {supabaseUrlInput && (
-              <button
-                type="button"
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: '#888',
-                  fontSize: '11px',
-                  cursor: 'pointer',
-                  marginTop: '4px',
-                  textDecoration: 'underline'
-                }}
-                onClick={handleResetSupabase}
-              >
-                Disconnect Supabase Cloud
-              </button>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
+                <span style={{ fontSize: '10px', color: '#666' }}>Active Cloud Instance: {supabaseUrlInput}</span>
+                <button
+                  type="button"
+                  onClick={handleUnlinkSupabase}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#ff6666',
+                    fontSize: '11px',
+                    cursor: 'pointer',
+                    textDecoration: 'underline'
+                  }}
+                >
+                  Unlink Supabase Cloud
+                </button>
+              </div>
             )}
           </div>
         )}
 
         {/* ========================================================================= */}
-        {/* TAB 2: AI VISION BACKEND                                                 */}
+        {/* TAB 2: PYTHON FASTAPI SURVEILLANCE ENGINE                                 */}
         {/* ========================================================================= */}
         {activeTab === 'backend' && (
           <div className="auth-form" style={{ gap: '12px' }}>
+            {/* Backend Engine Status Banner */}
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '12px 14px',
-                background: isConnected ? 'rgba(0, 255, 100, 0.08)' : 'rgba(255, 60, 60, 0.08)',
-                border: `1px solid ${isConnected ? 'rgba(0, 255, 100, 0.3)' : 'rgba(255, 60, 60, 0.3)'}`,
+                background: isConnected ? 'rgba(255, 255, 255, 0.06)' : 'rgba(255, 60, 60, 0.08)',
+                border: `1px solid ${isConnected ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 60, 60, 0.3)'}`,
                 borderRadius: '6px'
               }}
             >
@@ -369,8 +372,8 @@ export const BackendModal = ({ isOpen, onClose, isConnected }) => {
                     width: '10px',
                     height: '10px',
                     borderRadius: '50%',
-                    background: isConnected ? '#00ff66' : '#ff4444',
-                    boxShadow: isConnected ? '0 0 8px #00ff66' : '0 0 8px #ff4444'
+                    background: isConnected ? '#ffffff' : '#ff4444',
+                    boxShadow: isConnected ? '0 0 6px rgba(255, 255, 255, 0.6)' : '0 0 8px #ff4444'
                   }}
                 />
                 <div>
@@ -401,7 +404,7 @@ export const BackendModal = ({ isOpen, onClose, isConnected }) => {
                 <div style={{ fontWeight: 'bold', color: '#fff', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <Terminal size={12} /> Local Tunnel Command:
                 </div>
-                <span>Expose local machine to Vercel via: <code style={{ color: '#00ff66', background: '#000', padding: '2px 4px', borderRadius: '3px' }}>npx localtunnel --port 8000</code></span>
+                <span>Expose local machine to Vercel via: <code style={{ color: '#ffffff', background: '#000', padding: '2px 4px', borderRadius: '3px' }}>npx localtunnel --port 8000</code></span>
               </div>
             )}
 
@@ -429,9 +432,9 @@ export const BackendModal = ({ isOpen, onClose, isConnected }) => {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '8px',
-                  background: testBackendResult.success ? 'rgba(0, 255, 100, 0.1)' : 'rgba(255, 50, 50, 0.1)',
-                  color: testBackendResult.success ? '#00ff66' : '#ff6666',
-                  border: `1px solid ${testBackendResult.success ? 'rgba(0, 255, 100, 0.3)' : 'rgba(255, 50, 50, 0.3)'}`
+                  background: testBackendResult.success ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 50, 50, 0.1)',
+                  color: testBackendResult.success ? '#ffffff' : '#ff6666',
+                  border: `1px solid ${testBackendResult.success ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 50, 50, 0.3)'}`
                 }}
               >
                 {testBackendResult.success ? (

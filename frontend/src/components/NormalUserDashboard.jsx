@@ -607,7 +607,7 @@ export const NormalUserDashboard = ({
                 <h3>LIVE CAMERA TARGET LOCKING & CONTINUOUS TRACKING</h3>
               </div>
               <div className="panel-header-right">
-                <span className="panel-meta-tag">10-FRAME PREDICTIVE GRACE &bull; EXTERNAL FEED PUBLISHER</span>
+                <span className="panel-meta-tag">10-FRAME PREDICTIVE CONTINUITY</span>
                 <span className={`status-pill-monochrome ${isConnected ? 'online' : 'offline'}`}>
                   {isConnected ? 'WS STREAM ONLINE' : 'WS STREAM STANDBY'}
                 </span>

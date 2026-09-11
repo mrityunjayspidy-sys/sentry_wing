@@ -657,24 +657,24 @@ export const CameraFeed = ({
         onClick={handleCanvasClick}
       />
 
-      {/* Top HUD Badges (Feed Source + Live External Feed Publisher Status) */}
+      {/* Top HUD Badges (Feed Source Status) */}
       <div className="feed-source-indicator">
         {feedSourceType === 'video' ? (
           <div className="source-pill video-pill">
             <Film size={12} color="#ffffff" />
             <span className="source-name">VIDEO: {videoFileName || 'FILE'}</span>
-            <span className="source-status" style={{ color: isVideoPaused ? '#ffaa00' : '#00ff88', fontWeight: 700 }}>
+            <span className="source-status" style={{ color: isVideoPaused ? '#ffaa00' : '#ffffff', fontWeight: 700 }}>
               {isVideoPaused ? '[PAUSED]' : '[STREAMING]'}
             </span>
           </div>
         ) : feedSourceType === 'esp32' ? (
           <div className="source-pill esp32-pill" style={{
-            background: streamActive && !cameraError ? 'rgba(0, 255, 136, 0.12)' : 'rgba(255, 107, 107, 0.15)',
-            border: streamActive && !cameraError ? '1px solid rgba(0, 255, 136, 0.4)' : '1px solid rgba(255, 107, 107, 0.4)'
+            background: streamActive && !cameraError ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 107, 107, 0.15)',
+            border: streamActive && !cameraError ? '1px solid rgba(255, 255, 255, 0.25)' : '1px solid rgba(255, 107, 107, 0.4)'
           }}>
-            <Cpu size={12} color={streamActive && !cameraError ? '#00ff88' : '#ff6b6b'} />
+            <Cpu size={12} color={streamActive && !cameraError ? '#ffffff' : '#ff6b6b'} />
             <span className="source-name">ESP32-CAM MJPEG</span>
-            <span className="source-status" style={{ color: streamActive && !cameraError ? '#00ff88' : '#ff6b6b', fontWeight: 700 }}>
+            <span className="source-status" style={{ color: streamActive && !cameraError ? '#ffffff' : '#ff6b6b', fontWeight: 700 }}>
               {streamActive && !cameraError ? '[STREAMING]' : '[OFFLINE]'}
             </span>
           </div>
@@ -687,20 +687,11 @@ export const CameraFeed = ({
             <span className="source-name">
               LIVE CAMERA [{facingMode === 'user' ? (isMobileClient ? 'FRONT' : 'WEBCAM') : (isMobileClient ? 'REAR' : 'ENVIRONMENT')}]
             </span>
-            <span className="source-status" style={{ color: streamActive && !cameraError ? '#00ff88' : '#ff6b6b', fontWeight: 700 }}>
+            <span className="source-status" style={{ color: streamActive && !cameraError ? '#ffffff' : '#ff6b6b', fontWeight: 700 }}>
               {streamActive && !cameraError ? '[ACTIVE]' : '[OFFLINE]'}
             </span>
           </div>
         )}
-
-        {/* External Feed Publishing Status Badge */}
-        <div className="source-pill publish-pill" title="Continuous feed publishing to external endpoint /ws/live-feed">
-          <Share2 size={12} color="#00ff88" />
-          <span className="source-name">FEED PUBLISHER:</span>
-          <span className="source-status" style={{ color: '#00ff88', fontWeight: 800 }}>
-            [LIVE / BROADCASTING]
-          </span>
-        </div>
       </div>
 
       {/* Loading / Placeholder Screen */}
@@ -796,15 +787,15 @@ export const CameraFeed = ({
                 gap: 6
               }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
-                  <span style={{ color: '#00ff88', fontWeight: 800 }}>1.</span>
+                  <span style={{ color: '#ffffff', fontWeight: 800 }}>1.</span>
                   <span><strong>Browser Site Permission:</strong> Click the <strong>Lock (🔒) or Tune (🎛️)</strong> icon on the left side of your browser address bar next to the URL. Set <strong>Camera</strong> from <em>Block</em> to <strong>Allow</strong>.</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
-                  <span style={{ color: '#00ff88', fontWeight: 800 }}>2.</span>
+                  <span style={{ color: '#ffffff', fontWeight: 800 }}>2.</span>
                   <span><strong>Windows Privacy Settings:</strong> Press Windows Key, search <em>"Camera privacy settings"</em>, and verify that <strong>"Camera access"</strong> and <strong>"Let desktop apps access your camera"</strong> are turned <strong>ON</strong>.</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
-                  <span style={{ color: '#00ff88', fontWeight: 800 }}>3.</span>
+                  <span style={{ color: '#ffffff', fontWeight: 800 }}>3.</span>
                   <span><strong>Hardware In Use:</strong> Check that no other application (Zoom, Teams, Skype, OBS, or Windows Camera) is actively holding the webcam stream.</span>
                 </div>
               </div>
@@ -854,7 +845,7 @@ export const CameraFeed = ({
             {feedSourceType === 'esp32' && (
               <button
                 className="btn-tactical-main"
-                style={{ width: 'auto', padding: '10px 18px', display: 'flex', alignItems: 'center', gap: 6, fontSize: '12px', background: 'rgba(0, 255, 136, 0.15)', borderColor: '#00ff88', color: '#00ff88' }}
+                style={{ width: 'auto', padding: '10px 18px', display: 'flex', alignItems: 'center', gap: 6, fontSize: '12px', background: 'rgba(255, 255, 255, 0.08)', borderColor: 'rgba(255, 255, 255, 0.3)', color: '#ffffff' }}
                 onClick={() => initEsp32Source(esp32StreamUrl)}
               >
                 <RefreshCw size={15} /> RETRY ESP32 STREAM
@@ -1030,12 +1021,12 @@ export const CameraFeed = ({
                 borderRadius: 4,
                 marginBottom: 14,
                 fontSize: '11px',
-                background: esp32TestResult.online ? 'rgba(0, 255, 136, 0.1)' : 'rgba(255, 70, 70, 0.1)',
-                border: esp32TestResult.online ? '1px solid rgba(0, 255, 136, 0.3)' : '1px solid rgba(255, 70, 70, 0.3)',
-                color: esp32TestResult.online ? '#00ff88' : '#ff6b6b'
+                background: esp32TestResult.online ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 70, 70, 0.1)',
+                border: esp32TestResult.online ? '1px solid rgba(255, 255, 255, 0.25)' : '1px solid rgba(255, 70, 70, 0.3)',
+                color: esp32TestResult.online ? '#ffffff' : '#ff6b6b'
               }}>
                 {esp32TestResult.online
-                  ? `🟢 ONLINE: Responding (HTTP ${esp32TestResult.status_code}, ${esp32TestResult.latency_ms}ms)`
+                  ? `⚪ ONLINE: Responding (HTTP ${esp32TestResult.status_code}, ${esp32TestResult.latency_ms}ms)`
                   : `🔴 UNREACHABLE: ${esp32TestResult.error || 'Connection timed out. Verify Wi-Fi and 5V power.'}`}
               </div>
             )}
