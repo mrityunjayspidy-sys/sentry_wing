@@ -29,7 +29,6 @@ export const Navbar = ({
       {/* Brand & Status */}
       <div className="nav-brand-section">
         <div className="brand-logo-wrap">
-          <Shield size={20} className="brand-shield-icon" />
           <span className="brand-title">SENTRY<span className="brand-highlight">WING</span></span>
           <span className="brand-version-badge">v2.1 MONOCHROME</span>
         </div>
