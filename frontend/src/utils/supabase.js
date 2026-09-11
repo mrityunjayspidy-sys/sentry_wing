@@ -1,27 +1,110 @@
 import { createClient } from '@supabase/supabase-js';
 
-const rawUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const rawKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const STORAGE_URL_KEY = 'sentrywing_supabase_url';
+const STORAGE_KEY_KEY = 'sentrywing_supabase_anon_key';
+
+export const getSupabaseConfig = () => {
+  try {
+    const localUrl = localStorage.getItem(STORAGE_URL_KEY) || '';
+    const localKey = localStorage.getItem(STORAGE_KEY_KEY) || '';
+    if (localUrl && localKey) {
+      return { url: localUrl, key: localKey, source: 'localStorage' };
+    }
+  } catch {}
+
+  const envUrl = import.meta.env.VITE_SUPABASE_URL || '';
+  const envKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+  if (envUrl && envKey && !envUrl.includes('your-project.supabase.co')) {
+    return { url: envUrl, key: envKey, source: 'env' };
+  }
+
+  return { url: '', key: '', source: 'none' };
+};
+
+export const setSupabaseConfig = (url, key) => {
+  try {
+    const cleanUrl = (url || '').trim();
+    const cleanKey = (key || '').trim();
+    if (cleanUrl && cleanKey) {
+      localStorage.setItem(STORAGE_URL_KEY, cleanUrl);
+      localStorage.setItem(STORAGE_KEY_KEY, cleanKey);
+    } else {
+      localStorage.removeItem(STORAGE_URL_KEY);
+      localStorage.removeItem(STORAGE_KEY_KEY);
+    }
+    supabase = getSupabaseClient();
+    window.dispatchEvent(new CustomEvent('sentrywing_supabase_changed', { detail: { url: cleanUrl, key: cleanKey } }));
+  } catch (e) {
+    console.warn('Failed to update Supabase config in localStorage:', e);
+  }
+};
 
 // Determine if user has provided real Supabase project credentials
 export const isSupabaseConfigured = () => {
+  const { url, key } = getSupabaseConfig();
   return (
-    Boolean(rawUrl) &&
-    Boolean(rawKey) &&
-    !rawUrl.includes('your-project.supabase.co') &&
-    rawUrl.startsWith('https://')
+    Boolean(url) &&
+    Boolean(key) &&
+    !url.includes('your-project.supabase.co') &&
+    url.startsWith('https://')
   );
 };
 
-// Initialize Supabase client if configured, otherwise null
-export const supabase = isSupabaseConfigured()
-  ? createClient(rawUrl, rawKey, {
+export const getSupabaseClient = () => {
+  const { url, key } = getSupabaseConfig();
+  if (url && key && url.startsWith('https://') && !url.includes('your-project.supabase.co')) {
+    return createClient(url, key, {
       auth: {
         persistSession: true,
         autoRefreshToken: true
       }
-    })
-  : null;
+    });
+  }
+  return null;
+};
+
+// Initialize Supabase client if configured, otherwise null
+export let supabase = getSupabaseClient();
+
+export const testSupabasePing = async (candidateUrl, candidateKey) => {
+  const url = (candidateUrl || '').trim().replace(/\/+$/, '');
+  const key = (candidateKey || '').trim();
+  if (!url || !key) {
+    return { success: false, error: 'Both Supabase URL and Anon Key are required.' };
+  }
+  if (!url.startsWith('https://')) {
+    return { success: false, error: 'Supabase URL must start with https://' };
+  }
+
+  const start = performance.now();
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    const resp = await fetch(`${url}/rest/v1/`, {
+      method: 'GET',
+      headers: {
+        apikey: key,
+        Authorization: `Bearer ${key}`
+      },
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+    const latency = Math.round(performance.now() - start);
+
+    if (resp.ok) {
+      return { success: true, latency };
+    }
+    if (resp.status === 401 || resp.status === 403) {
+      return { success: false, error: 'Invalid Anon API Key (Unauthorized).' };
+    }
+    return { success: false, error: `Supabase returned status ${resp.status}` };
+  } catch (err) {
+    if (err.name === 'AbortError') {
+      return { success: false, error: 'Connection timed out (5s).' };
+    }
+    return { success: false, error: err.message || 'Failed to contact Supabase URL.' };
+  }
+};
 
 // =============================================================================
 // AUTH HELPERS
