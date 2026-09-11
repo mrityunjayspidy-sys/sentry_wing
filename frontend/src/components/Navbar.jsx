@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Radio, Bell, LogOut, User, Stethoscope, Compass, Server } from 'lucide-react';
+import { Info, Bell, LogOut, User, Stethoscope, Compass, Server } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { soundFx } from '../utils/audio';
 
@@ -7,7 +7,8 @@ export const Navbar = ({
   isConnected,
   unreadCount = 0,
   onOpenNotifications,
-  onOpenBackendModal
+  onOpenBackendModal,
+  onOpenAboutModal
 }) => {
   const { currentUser, logout, setIsAuthModalOpen } = useAuth();
 
@@ -39,7 +40,7 @@ export const Navbar = ({
             soundFx.playTapClick();
             if (onOpenBackendModal) onOpenBackendModal();
           }}
-          title="Click to configure AI Engine Backend Server Link"
+          title="Click to configure AI Engine Backend & Supabase Cloud Link"
           style={{ cursor: 'pointer', background: 'transparent', border: 'none', padding: 0 }}
         >
           <div className={`status-dot-mono ${isConnected ? 'pulsing' : ''}`} />
@@ -48,8 +49,21 @@ export const Navbar = ({
         </button>
       </div>
 
-      {/* Right Controls: Notification Bell, Profile, Switch/Logout */}
+      {/* Right Controls: Info "i", Notification Bell, Profile, Switch/Logout */}
       <div className="nav-controls-section">
+        {/* About & Tech Stack Info Button */}
+        <button
+          className="btn-info-about"
+          onClick={() => {
+            soundFx.playTapClick();
+            if (onOpenAboutModal) onOpenAboutModal();
+          }}
+          title="System Architecture, AI Models & Tech Stack"
+          aria-label="System Specifications"
+        >
+          <Info size={17} />
+        </button>
+
         {/* Notification Bell for Vet, Admin & Users */}
         {currentUser && (
           <button

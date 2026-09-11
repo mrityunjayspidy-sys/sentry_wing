@@ -12,6 +12,7 @@ import { NormalUserDashboard } from './components/NormalUserDashboard';
 import { VetDashboard } from './components/VetDashboard';
 import { AdminDashboard } from './components/AdminDashboard';
 import { BackendModal } from './components/BackendModal';
+import { AboutModal } from './components/AboutModal';
 import { apiFetch, getWsBaseUrl } from './utils/api';
 import { Bell, MapPin, X, ArrowRight, AlertTriangle, Crosshair, Scale } from 'lucide-react';
 import {
@@ -72,6 +73,7 @@ function SentryWingApp() {
   // Notification state
   const [isNotifDrawerOpen, setIsNotifDrawerOpen] = useState(false);
   const [isBackendModalOpen, setIsBackendModalOpen] = useState(false);
+  const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
@@ -281,6 +283,7 @@ function SentryWingApp() {
         unreadCount={unreadCount}
         onOpenNotifications={() => setIsNotifDrawerOpen(true)}
         onOpenBackendModal={() => setIsBackendModalOpen(true)}
+        onOpenAboutModal={() => setIsAboutModalOpen(true)}
       />
 
       {/* Main View Port gated by role */}
@@ -326,6 +329,11 @@ function SentryWingApp() {
         isOpen={isBackendModalOpen}
         onClose={() => setIsBackendModalOpen(false)}
         isConnected={isConnected}
+      />
+
+      <AboutModal
+        isOpen={isAboutModalOpen}
+        onClose={() => setIsAboutModalOpen(false)}
       />
     </div>
   );
