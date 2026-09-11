@@ -24,6 +24,8 @@ backend/.env
 backend/data/*.db-journal
 *.db
 backend/data/*.db
+backend/models/*.onnx
+backend/models/*_int8.onnx
 
 # OS & IDE
 .DS_Store

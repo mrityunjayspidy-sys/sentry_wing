@@ -257,22 +257,33 @@ export const AboutModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              {/* Model 5: Edge Wildlife Fallback */}
+              {/* Model 5: Real SentryWing YOLO11s ONNX Engine */}
               <div className="spec-card">
                 <div className="spec-card-head">
                   <div className="spec-card-title-wrap">
                     <Zap size={18} className="text-accent" />
                     <div>
-                      <div className="spec-card-title">Edge Wildlife Intelligence Engine (Fallback)</div>
-                      <div className="spec-card-file">frontend/src/utils/edgeDetector.js &bull; Client Canvas Vision</div>
+                      <div className="spec-card-title">SentryWing YOLO11s ONNX Neural Vision Engine</div>
+                      <div className="spec-card-file">frontend/public/models/detector.onnx &bull; onnxruntime-web WASM</div>
                     </div>
                   </div>
-                  <span className="spec-badge-stage">EDGE AI</span>
+                  <span className="spec-badge-stage">EDGE NEURAL</span>
                 </div>
                 <p className="spec-card-desc">
-                  Autonomous client-side fallback engine providing zero-failure detection and dosage computation
-                  even when deployed on static web hosts (Vercel CDN) or in disconnected offline field operations.
+                  Autonomous client-side neural vision running the genuine trained 8-species SentryWing YOLO11s
+                  model weights directly in-browser with ONNX Runtime WebAssembly acceleration on Vercel CDN.
                 </p>
+                <div className="spec-points-list">
+                  <div className="spec-point-item">
+                    <strong>Model Weights:</strong> SentryWing YOLO11s INT8 Quantized ONNX (9.4 MB)
+                  </div>
+                  <div className="spec-point-item">
+                    <strong>Trained Sanctuary Classes:</strong> Tiger, Cheetah, Lion, Hyena, Leopard, Bear, Fox, Elephant
+                  </div>
+                  <div className="spec-point-item">
+                    <strong>Hardware Acceleration:</strong> Client-side WASM SIMD execution with zero-latency inference
+                  </div>
+                </div>
               </div>
             </div>
           </div>
