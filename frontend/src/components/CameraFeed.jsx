@@ -22,6 +22,7 @@ import {
   VideoFileFrameSource,
   ESP32MjpegFrameSource
 } from '../utils/frameSource';
+import { apiFetch } from '../utils/api';
 
 export const CameraFeed = ({
   wsClient,
@@ -180,7 +181,7 @@ export const CameraFeed = ({
     setEsp32Testing(true);
     setEsp32TestResult(null);
     try {
-      const resp = await fetch(`/api/esp32/status?url=${encodeURIComponent(tempEsp32Url)}`);
+      const resp = await apiFetch(`/api/esp32/status?url=${encodeURIComponent(tempEsp32Url)}`);
       const data = await resp.json();
       setEsp32TestResult(data);
     } catch (e) {

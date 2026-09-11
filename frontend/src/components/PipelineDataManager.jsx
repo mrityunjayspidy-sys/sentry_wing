@@ -17,6 +17,7 @@ import {
   X
 } from 'lucide-react';
 import { soundFx } from '../utils/audio';
+import { apiFetch } from '../utils/api';
 
 export const PipelineDataManager = () => {
   const [viewMode, setViewMode] = useState('valid'); // 'valid' | 'false'
@@ -38,8 +39,8 @@ export const PipelineDataManager = () => {
       }
 
       const [resResp, statsResp] = await Promise.all([
-        fetch(url),
-        fetch('/api/pipeline/model-results/stats')
+        apiFetch(url),
+        apiFetch('/api/pipeline/model-results/stats')
       ]);
 
       const resData = await resResp.json();
@@ -71,7 +72,7 @@ export const PipelineDataManager = () => {
     soundFx.playTapClick();
     setIsPurging(true);
     try {
-      const resp = await fetch('/api/pipeline/model-results/unwanted?purge_all_invalid=true', {
+      const resp = await apiFetch('/api/pipeline/model-results/unwanted?purge_all_invalid=true', {
         method: 'DELETE'
       });
       const data = await resp.json();
@@ -91,7 +92,7 @@ export const PipelineDataManager = () => {
   const handleFlagFalse = async (recordId) => {
     soundFx.playTapClick();
     try {
-      const resp = await fetch(`/api/pipeline/model-results/${recordId}/flag-false`, {
+      const resp = await apiFetch(`/api/pipeline/model-results/${recordId}/flag-false`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reason: 'MANUALLY_FLAGGED_BY_OFFICER' })

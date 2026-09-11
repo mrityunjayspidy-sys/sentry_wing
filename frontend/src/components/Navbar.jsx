@@ -1,12 +1,13 @@
 import React from 'react';
-import { Shield, Radio, Bell, LogOut, User, Stethoscope, Compass } from 'lucide-react';
+import { Shield, Radio, Bell, LogOut, User, Stethoscope, Compass, Server } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { soundFx } from '../utils/audio';
 
 export const Navbar = ({
   isConnected,
   unreadCount = 0,
-  onOpenNotifications
+  onOpenNotifications,
+  onOpenBackendModal
 }) => {
   const { currentUser, logout, setIsAuthModalOpen } = useAuth();
 
@@ -33,10 +34,19 @@ export const Navbar = ({
           <span className="brand-version-badge">v2.1 MONOCHROME</span>
         </div>
 
-        <div className={`status-pill-mono ${isConnected ? 'online' : 'offline'}`}>
+        <button
+          className={`status-pill-mono ${isConnected ? 'online' : 'offline'}`}
+          onClick={() => {
+            soundFx.playTapClick();
+            if (onOpenBackendModal) onOpenBackendModal();
+          }}
+          title="Click to configure AI Engine Backend Server Link"
+          style={{ cursor: 'pointer', background: 'transparent', border: 'none', padding: 0 }}
+        >
           <div className={`status-dot-mono ${isConnected ? 'pulsing' : ''}`} />
           <span>{isConnected ? 'SURVEILLANCE ENGINE ONLINE' : 'ENGINE CONNECTING...'}</span>
-        </div>
+          <Server size={11} style={{ opacity: 0.7, marginLeft: '4px' }} />
+        </button>
       </div>
 
       {/* Right Controls: Notification Bell, Profile, Switch/Logout */}

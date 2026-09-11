@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { soundFx } from '../utils/audio';
 import { useAuth } from '../context/AuthContext';
+import { apiFetch } from '../utils/api';
 import { LiveFeedViewer } from './LiveFeedViewer';
 
 export const VetDashboard = () => {
@@ -46,7 +47,7 @@ export const VetDashboard = () => {
       if (speciesFilter !== 'ALL') url += `&species=${speciesFilter.toLowerCase()}`;
       if (statusFilter !== 'ALL') url += `&status=${statusFilter.toLowerCase()}`;
 
-      const resp = await fetch(url);
+      const resp = await apiFetch(url);
       const data = await resp.json();
       if (data.events) {
         setDetections(data.events);
@@ -80,7 +81,7 @@ export const VetDashboard = () => {
     }
     soundFx.playTapClick();
     try {
-      const resp = await fetch(`/api/detections/${detId}`, { method: 'DELETE' });
+      const resp = await apiFetch(`/api/detections/${detId}`, { method: 'DELETE' });
       if (resp.ok) {
         soundFx.playLockAcquired();
         setDetections((prev) => prev.filter((d) => d.id !== detId));
@@ -104,7 +105,7 @@ export const VetDashboard = () => {
     }
     soundFx.playTapClick();
     try {
-      const resp = await fetch('/api/detections', { method: 'DELETE' });
+      const resp = await apiFetch('/api/detections', { method: 'DELETE' });
       if (resp.ok) {
         soundFx.playLockAcquired();
         setDetections([]);
@@ -124,7 +125,7 @@ export const VetDashboard = () => {
     soundFx.playTapClick();
 
     try {
-      const resp = await fetch(`/api/detections/${selectedDet.id}/review`, {
+      const resp = await apiFetch(`/api/detections/${selectedDet.id}/review`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -3,6 +3,8 @@
  * Handles bi-directional transmission of binary video frames and JSON telemetry/commands.
  */
 
+import { getWsBaseUrl } from './api';
+
 export class StreamWebSocket {
   constructor(customWsUrl = null) {
     this.customWsUrl = customWsUrl;
@@ -14,25 +16,23 @@ export class StreamWebSocket {
     this.onTelemetryCallback = null;
     this.onStatusChangeCallback = null;
     this.isFrameInFlight = false;
+
+    // Listen to backend changes from the UI
+    if (typeof window !== 'undefined') {
+      window.addEventListener('sentrywing_backend_changed', () => {
+        if (this.isConnected || this.isConnecting) {
+          this.disconnect();
+          setTimeout(() => this.connect(), 200);
+        }
+      });
+    }
   }
 
   getWsUrl() {
     if (this.customWsUrl) {
       return this.customWsUrl;
     }
-    const isHttps = window.location.protocol === 'https:';
-    const protocol = isHttps ? 'wss:' : 'ws:';
-
-    // When served over HTTPS (e.g. Vite with basicSsl on port 5173), connect through
-    // Vite's proxy on the same origin (window.location.host) which securely terminates TLS
-    // and proxies ws:// to port 8000. Connecting wss:// directly to port 8000 causes ERR_SSL_PROTOCOL_ERROR.
-    if (isHttps || window.location.port === '5173') {
-      return `${protocol}//${window.location.host}/ws/stream`;
-    }
-
-    // Direct HTTP connection fallback
-    const host = window.location.hostname || '127.0.0.1';
-    return `ws://${host}:8000/ws/stream`;
+    return getWsBaseUrl('/ws/stream');
   }
 
   connect(url = null) {

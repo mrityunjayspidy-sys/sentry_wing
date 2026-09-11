@@ -11,6 +11,8 @@ import { NotificationDrawer } from './components/NotificationDrawer';
 import { NormalUserDashboard } from './components/NormalUserDashboard';
 import { VetDashboard } from './components/VetDashboard';
 import { AdminDashboard } from './components/AdminDashboard';
+import { BackendModal } from './components/BackendModal';
+import { apiFetch, getWsBaseUrl } from './utils/api';
 import { Bell, MapPin, X, ArrowRight, AlertTriangle, Crosshair, Scale } from 'lucide-react';
 import {
   supabaseSaveNotification,
@@ -69,6 +71,7 @@ function SentryWingApp() {
 
   // Notification state
   const [isNotifDrawerOpen, setIsNotifDrawerOpen] = useState(false);
+  const [isBackendModalOpen, setIsBackendModalOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
@@ -102,7 +105,7 @@ function SentryWingApp() {
   // Fetch notifications from database
   const fetchNotifications = async () => {
     try {
-      const resp = await fetch('/api/notifications?limit=50');
+      const resp = await apiFetch('/api/notifications?limit=50');
       const data = await resp.json();
       if (data.notifications) {
         setNotifications(data.notifications);
@@ -117,10 +120,7 @@ function SentryWingApp() {
   useEffect(() => {
     fetchNotifications();
 
-    const isHttps = window.location.protocol === 'https:';
-    const protocol = isHttps ? 'wss:' : 'ws:';
-    const host = window.location.host;
-    const notifWsUrl = `${protocol}//${host}/ws/notifications`;
+    const notifWsUrl = getWsBaseUrl('/ws/notifications');
 
     let notifSocket = null;
     try {
@@ -177,7 +177,7 @@ function SentryWingApp() {
 
   const handleMarkNotificationRead = async (id) => {
     try {
-      await fetch(`/api/notifications/${id}/read`, { method: 'POST' });
+      await apiFetch(`/api/notifications/${id}/read`, { method: 'POST' });
       setNotifications((prev) =>
         prev.map((n) => (n.id === id ? { ...n, read: 1 } : n))
       );
@@ -187,7 +187,7 @@ function SentryWingApp() {
 
   const handleDeleteNotification = async (id) => {
     try {
-      await fetch(`/api/notifications/${id}`, { method: 'DELETE' });
+      await apiFetch(`/api/notifications/${id}`, { method: 'DELETE' });
       setNotifications((prev) => prev.filter((n) => n.id !== id));
       setUnreadCount((c) => Math.max(0, c - 1));
       supabaseDeleteNotification(id).catch(() => {});
@@ -198,7 +198,7 @@ function SentryWingApp() {
 
   const handleClearAllNotifications = async () => {
     try {
-      await fetch('/api/notifications', { method: 'DELETE' });
+      await apiFetch('/api/notifications', { method: 'DELETE' });
       setNotifications([]);
       setUnreadCount(0);
       supabaseClearNotifications().catch(() => {});
@@ -280,6 +280,7 @@ function SentryWingApp() {
         isConnected={isConnected}
         unreadCount={unreadCount}
         onOpenNotifications={() => setIsNotifDrawerOpen(true)}
+        onOpenBackendModal={() => setIsBackendModalOpen(true)}
       />
 
       {/* Main View Port gated by role */}
@@ -319,6 +320,12 @@ function SentryWingApp() {
         onMarkRead={handleMarkNotificationRead}
         onDeleteNotification={handleDeleteNotification}
         onClearAllNotifications={handleClearAllNotifications}
+      />
+
+      <BackendModal
+        isOpen={isBackendModalOpen}
+        onClose={() => setIsBackendModalOpen(false)}
+        isConnected={isConnected}
       />
     </div>
   );

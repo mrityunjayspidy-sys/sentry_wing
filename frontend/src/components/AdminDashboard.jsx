@@ -23,6 +23,7 @@ import 'leaflet/dist/leaflet.css';
 import { soundFx } from '../utils/audio';
 import { LiveFeedViewer } from './LiveFeedViewer';
 import { PipelineDataManager } from './PipelineDataManager';
+import { apiFetch } from '../utils/api';
 
 export const AdminDashboard = () => {
   const [adminTab, setAdminTab] = useState('map'); // 'map' | 'users' | 'stats' | 'live_feed' | 'pipeline'
@@ -38,9 +39,9 @@ export const AdminDashboard = () => {
   const fetchAdminData = useCallback(async () => {
     try {
       const [detResp, userResp, statResp] = await Promise.all([
-        fetch('/api/detections?limit=200'),
-        fetch('/api/admin/users'),
-        fetch('/api/admin/stats')
+        apiFetch('/api/detections?limit=200'),
+        apiFetch('/api/admin/users'),
+        apiFetch('/api/admin/stats')
       ]);
       const detData = await detResp.json();
       const userData = await userResp.json();
@@ -162,7 +163,7 @@ export const AdminDashboard = () => {
   const handleToggleDeactivate = async (userId, currentStatus) => {
     soundFx.playTapClick();
     try {
-      const resp = await fetch(`/api/admin/users/${userId}/deactivate`, {
+      const resp = await apiFetch(`/api/admin/users/${userId}/deactivate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ is_active: !currentStatus })
@@ -181,7 +182,7 @@ export const AdminDashboard = () => {
   const handleChangeRole = async (userId, newRole) => {
     soundFx.playTapClick();
     try {
-      const resp = await fetch(`/api/admin/users/${userId}/role`, {
+      const resp = await apiFetch(`/api/admin/users/${userId}/role`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ role: newRole })
@@ -202,7 +203,7 @@ export const AdminDashboard = () => {
     if (!window.confirm('Delete this sighting from the reserve repository?')) return;
     soundFx.playTapClick();
     try {
-      const resp = await fetch(`/api/detections/${detId}`, { method: 'DELETE' });
+      const resp = await apiFetch(`/api/detections/${detId}`, { method: 'DELETE' });
       if (resp.ok) {
         soundFx.playLockAcquired();
         setDetections((prev) => prev.filter((d) => d.id !== detId));

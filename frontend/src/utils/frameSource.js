@@ -6,6 +6,8 @@
  * physical video sensor (Browser Phone Camera vs. ESP32-CAM MJPEG Stream vs. Video File).
  */
 
+import { getApiBaseUrl } from './api';
+
 /**
  * Base abstract class defining the FrameSource contract.
  */
@@ -317,7 +319,8 @@ export class ESP32MjpegFrameSource extends FrameSource {
     let effectiveSrc = streamUrl;
     if (streamUrl.startsWith('http://') || streamUrl.startsWith('https://')) {
       if (!streamUrl.includes('/api/esp32/stream')) {
-        effectiveSrc = `/api/esp32/stream?url=${encodeURIComponent(streamUrl)}`;
+        const base = getApiBaseUrl();
+        effectiveSrc = `${base}/api/esp32/stream?url=${encodeURIComponent(streamUrl)}`;
       }
     }
 

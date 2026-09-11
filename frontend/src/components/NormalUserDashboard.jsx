@@ -42,6 +42,7 @@ import {
 import { CameraFeed } from './CameraFeed';
 import { TargetReticle } from './TargetReticle';
 import { AttributeCard } from './AttributeCard';
+import { apiFetch } from '../utils/api';
 
 export const NormalUserDashboard = ({
   wsClient,
@@ -174,7 +175,7 @@ export const NormalUserDashboard = ({
   // =========================================================================
   const fetchMyHistory = useCallback(async () => {
     try {
-      const resp = await fetch('/api/detections?limit=100');
+      const resp = await apiFetch('/api/detections?limit=100');
       const data = await resp.json();
       if (data.events) {
         setHistoryEvents(data.events);
@@ -339,7 +340,7 @@ export const NormalUserDashboard = ({
     formData.append('conf_threshold', photoConf.toString());
 
     try {
-      const resp = await fetch('/api/detect/photo', {
+      const resp = await apiFetch('/api/detect/photo', {
         method: 'POST',
         body: formData
       });
@@ -413,7 +414,7 @@ export const NormalUserDashboard = ({
     formData.append('conf_threshold', videoConf.toString());
 
     try {
-      const resp = await fetch('/api/detect/video', {
+      const resp = await apiFetch('/api/detect/video', {
         method: 'POST',
         body: formData
       });

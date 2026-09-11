@@ -8,6 +8,7 @@ import {
   supabaseGetSession,
   supabaseGetUserProfile
 } from '../utils/supabase';
+import { apiFetch } from '../utils/api';
 
 const AuthContext = createContext();
 
@@ -90,7 +91,7 @@ export const AuthProvider = ({ children }) => {
         setIsAuthModalOpen(false);
 
         // Keep local backend in sync
-        fetch('/api/auth/login', {
+        apiFetch('/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password, role })
@@ -104,7 +105,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     // Local Backend Authentication
-    const resp = await fetch('/api/auth/login', {
+    const resp = await apiFetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password, role })
@@ -139,7 +140,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     // Always ensure backend user record exists as well
-    const resp = await fetch('/api/auth/register', {
+    const resp = await apiFetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password, role })
